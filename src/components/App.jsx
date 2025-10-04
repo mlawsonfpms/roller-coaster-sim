@@ -1,17 +1,24 @@
 import React from "react";
 import "./App.css";
+import CoasterSimulation from "./simulation/CoasterSimulation";
 
-const App = () => {
+function App() {
   return (
-    <div className="app-container">
-      <h1>🎢 Roller Coaster Energy Simulator</h1>
-      <p>
-        Welcome! This interactive simulation lets you explore how potential and
-        kinetic energy transform along a coaster track. Use the controls below to
-        build, test, and analyze your own coaster design.
-      </p>
+    <div className="App">
+      <header className="app-header">
+        <h1>Roller Coaster Physics Simulator</h1>
+        <p>Observe the transfer of potential and kinetic energy as your coaster moves!</p>
+      </header>
+      <main>
+        <CoasterSimulation />
+      </main>
+      <footer>
+        <p>
+          Created by FPMS Science — Explore Motion, Forces, and Energy 🚀
+        </p>
+      </footer>
     </div>
   );
-};
+}
 
 export default App;
