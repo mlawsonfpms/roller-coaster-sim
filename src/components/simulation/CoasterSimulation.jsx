@@ -1,69 +1,74 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { calculatePhysics } from "../../utils/physics";
 import "./CoasterSimulation.css";
-import EnergyMeter from "./EnergyMeter";
 
-export default function CoasterSimulation() {
+export default function CoasterSimulation({ trackData }) {
   const canvasRef = useRef(null);
   const [position, setPosition] = useState(0);
-  const [speed, setSpeed] = useState(0.1);
-  const [paused, setPaused] = useState(false);
+  const [velocity, setVelocity] = useState(0);
+  const [energy, setEnergy] = useState({ potential: 0, kinetic: 0, total: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+
     let animationFrameId;
+    let lastTime = performance.now();
 
-    const drawTrack = () => {
-      ctx.beginPath();
-      ctx.moveTo(0, 300);
-      ctx.bezierCurveTo(150, 100, 350, 100, 500, 300);
-      ctx.bezierCurveTo(650, 500, 850, 500, 1000, 300);
-      ctx.strokeStyle = "#333";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-    };
+    const animate = (time) => {
+      const dt = (time - lastTime) / 1000; // convert to seconds
+      lastTime = time;
 
-    const drawCoaster = () => {
-      const x = position % 1000;
-      const y = 300 - Math.sin((x / 1000) * Math.PI * 2) * 150;
-      ctx.beginPath();
-      ctx.arc(x, y, 15, 0, Math.PI * 2);
-      ctx.fillStyle = "red";
-      ctx.fill();
-    };
+      // Apply physics update
+      const { newPosition, newVelocity, newEnergy } = calculatePhysics(
+        position,
+        velocity,
+        trackData,
+        dt
+      );
 
-    const render = () => {
+      setPosition(newPosition);
+      setVelocity(newVelocity);
+      setEnergy(newEnergy);
+
+      // --- Drawing section ---
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawTrack();
-      drawCoaster();
-      if (!paused) setPosition((prev) => prev + speed);
-      animationFrameId = requestAnimationFrame(render);
+      ctx.strokeStyle = "gray";
+      ctx.lineWidth = 2;
+
+      // Draw track
+      ctx.beginPath();
+      for (let i = 0; i < trackData.length; i++) {
+        const p = trackData[i];
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+
+      // Draw coaster car
+      const carX = trackData[Math.floor(newPosition)]?.x || 50;
+      const carY = trackData[Math.floor(newPosition)]?.y || 50;
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(carX, carY, 10, 0, 2 * Math.PI);
+      ctx.fill();
+
+      animationFrameId = requestAnimationFrame(animate);
     };
 
-    render();
+    animationFrameId = requestAnimationFrame(animate);
+
     return () => cancelAnimationFrame(animationFrameId);
-  }, [position, paused, speed]);
+  }, [trackData, position, velocity]);
 
   return (
     <div className="coaster-simulation">
-      <h2>🎢 Roller Coaster Energy Simulator 🎢</h2>
-      <canvas ref={canvasRef} width={1000} height={600}></canvas>
-      
-      {/* Energy meter display */}
-      <EnergyMeter position={position} speed={speed} />
-
-      <div className="controls">
-        <button onClick={() => setPaused(!paused)}>
-          {paused ? "Resume" : "Pause"}
-        </button>
-        <button onClick={() => setSpeed((s) => Math.max(0.05, s - 0.05))}>
-          Slow Down
-        </button>
-        <button onClick={() => setSpeed((s) => Math.min(1, s + 0.05))}>
-          Speed Up
-        </button>
+      <canvas ref={canvasRef} width={800} height={400}></canvas>
+      <div className="energy-display">
+        <p>Potential Energy: {energy.potential.toFixed(2)}</p>
+        <p>Kinetic Energy: {energy.kinetic.toFixed(2)}</p>
+        <p>Total Energy: {energy.total.toFixed(2)}</p>
       </div>
     </div>
   );
 }
-
