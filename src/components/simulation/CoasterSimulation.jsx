@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import "./CoasterSimulation.css";
+import EnergyMeter from "./EnergyMeter";
 
 export default function CoasterSimulation() {
   const canvasRef = useRef(null);
@@ -45,7 +46,12 @@ export default function CoasterSimulation() {
 
   return (
     <div className="coaster-simulation">
+      <h2>🎢 Roller Coaster Energy Simulator 🎢</h2>
       <canvas ref={canvasRef} width={1000} height={600}></canvas>
+      
+      {/* Energy meter display */}
+      <EnergyMeter position={position} speed={speed} />
+
       <div className="controls">
         <button onClick={() => setPaused(!paused)}>
           {paused ? "Resume" : "Pause"}
@@ -60,3 +66,4 @@ export default function CoasterSimulation() {
     </div>
   );
 }
+
