@@ -1,0 +1,19 @@
+.energy-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to bottom, #fff, #e6f7ff);
+  border: 2px solid #007acc;
+  border-radius: 10px;
+  padding: 15px;
+  width: 300px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.energy-meter p {
+  font-size: 1rem;
+  margin-top: 8px;
+  color: #003366;
+  font-weight: 600;
+}
