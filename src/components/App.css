@@ -1,21 +1,25 @@
-.app-container {
+.App {
   text-align: center;
-  padding: 2rem;
-  background: linear-gradient(180deg, #aee1f9 0%, #ffffff 100%);
+  background: linear-gradient(to bottom, #f0f8ff, #ffffff);
   min-height: 100vh;
-  font-family: "Trebuchet MS", Helvetica, sans-serif;
-}
-
-h1 {
-  font-size: 2.5rem;
   color: #003366;
-  margin-bottom: 1rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-p {
-  max-width: 600px;
-  margin: 0 auto;
+.app-header {
+  background-color: #007acc;
+  color: white;
+  padding: 20px 0;
+  border-bottom: 4px solid #005f99;
+}
+
+main {
+  padding: 20px;
+}
+
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  font-size: 0.9rem;
   color: #333;
-  line-height: 1.6;
-  font-size: 1.1rem;
 }
