@@ -1,25 +1,56 @@
-export const GRAVITY = 9.81; // m/s²
+// Basic physics model for the coaster
+// Handles gravity, slopes, and energy calculations
 
-// Calculate potential energy: PE = m * g * h
-export function potentialEnergy(mass, height) {
-  return mass * GRAVITY * height;
-}
+const g = 9.8; // acceleration due to gravity (m/s²)
+const mass = 1.0; // mass of coaster (arbitrary unit)
 
-// Calculate kinetic energy: KE = 0.5 * m * v²
-export function kineticEnergy(mass, velocity) {
-  return 0.5 * mass * velocity * velocity;
-}
+export function calculatePhysics(position, velocity, trackData, dt) {
+  if (!trackData || trackData.length < 2) {
+    return {
+      newPosition: position,
+      newVelocity: velocity,
+      newEnergy: { potential: 0, kinetic: 0, total: 0 },
+    };
+  }
 
-// Simple energy conservation model: total energy = PE + KE
-export function totalEnergy(mass, height, velocity) {
-  return potentialEnergy(mass, height) + kineticEnergy(mass, velocity);
-}
+  // Get points along the track
+  const index = Math.floor(position);
+  const nextIndex = Math.min(index + 1, trackData.length - 1);
 
-// Basic simulation step for roller coaster motion
-export function simulateStep(position, velocity, slope, deltaTime) {
-  // Slope affects acceleration
-  const acceleration = GRAVITY * Math.sin(slope);
-  const newVelocity = velocity + acceleration * deltaTime;
-  const newPosition = position + newVelocity * deltaTime;
-  return { newPosition, newVelocity };
+  const current = trackData[index];
+  const next = trackData[nextIndex];
+
+  // Calculate slope angle (radians)
+  const dx = next.x - current.x;
+  const dy = next.y - current.y;
+  const slopeAngle = Math.atan2(-dy, dx); // negative because y increases downward
+
+  // Acceleration from gravity component
+  const acceleration = g * Math.sin(slopeAngle);
+
+  // Update velocity and position
+  let newVelocity = velocity + acceleration * dt;
+  let newPosition = position + newVelocity * dt * 10; // scaled for visualization
+
+  // Keep within bounds
+  if (newPosition >= trackData.length - 1) {
+    newPosition = trackData.length - 1;
+    newVelocity = 0;
+  }
+  if (newPosition < 0) {
+    newPosition = 0;
+    newVelocity = 0;
+  }
+
+  // Energy calculations
+  const height = current.y;
+  const potential = mass * g * (400 - height); // relative to canvas bottom
+  const kinetic = 0.5 * mass * newVelocity ** 2;
+  const total = potential + kinetic;
+
+  return {
+    newPosition,
+    newVelocity,
+    newEnergy: { potential, kinetic, total },
+  };
 }
