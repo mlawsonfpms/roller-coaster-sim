@@ -1,8 +1,11 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// Replace YOUR_REPO_NAME below with your actual repo name (for example: 'roller-coaster-sim')
+// ✅ Ensure the base path matches your GitHub Pages repo name
 export default defineConfig({
   plugins: [react()],
-  base: '/roller-coaster-sim/', 
-});
+  base: '/roller-coaster-sim/', // make sure this matches EXACTLY
+  build: {
+    outDir: 'dist',
+  },
+})
