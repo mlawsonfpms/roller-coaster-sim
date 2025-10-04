@@ -1,24 +1,8 @@
-import React from "react";
-import "./App.css";
-import CoasterSimulation from "./simulation/CoasterSimulation";
-
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="app-header">
-        <h1>Roller Coaster Physics Simulator</h1>
-        <p>Observe the transfer of potential and kinetic energy as your coaster moves!</p>
-      </header>
-      <main>
-        <CoasterSimulation />
-      </main>
-      <footer>
-        <p>
-          Created by FPMS Science — Explore Motion, Forces, and Energy 🚀
-        </p>
-      </footer>
+    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+      <h1>🎢 Hello from React!</h1>
+      <p>If you see this, React is working!</p>
     </div>
-  );
+  )
 }
-
-export default App;
