@@ -1,11 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// ✅ Automatically set base path for GitHub Pages, empty for local dev
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   plugins: [react()],
-  base: command === 'build' ? '/roller-coaster-sim/' : '/',
+  base: './', // 👈 local-friendly relative base path
   build: {
     outDir: 'dist',
   },
-}))
+})
